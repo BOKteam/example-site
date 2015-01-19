@@ -7,68 +7,25 @@
  */
 goog.provide("app.Router");
 
+goog.require("bok.backboneplus.BBPRouter");
 goog.require("modules.shell.View");
 goog.require("modules.test.View");
 goog.require("modules.home.View");
 
-app.Router = Backbone.Router.extend({
+app.Router = function() {
+    BBPRouter.call(this, new modules.shell.View());
 
-    routes: {
-        '': 'home',
-        'test': 'test'
-    },
+    //init routes
+    this.regRoutes({
+        '': function() {
+            this.viewFunc.home();
+        },
+        test: ''
+    });
 
-    home: function(){
-        this.home();
-    },
+    //create managed views
+    this.createGenericView('test', new modules.test.View());
+    this.createGenericView('home', new modules.home.View());
+};
+BOK.inherits(app.Router, BBPRouter);
 
-    /**
-     * @override
-     * */
-    execute: function (callback, args) {
-        if('function' == typeof callback)
-            callback.apply(this, args);
-        else {
-            var routeName = Backbone.history.getFragment().replace(/\/.*/, '');
-            var defaultFunc = this[routeName];
-            defaultFunc && defaultFunc.apply(this, args);
-        }
-    },
-
-    /**
-     * @override
-     * */
-    initialize: function () {
-        this.views = {};
-        this.views.shell = new modules.shell.View();
-        $('body').html(this.views.shell.render().el);
-
-        //create views
-        this.createGenericView('test', new modules.test.View());
-        this.createGenericView('home', new modules.home.View());
-    },
-
-    /**
-     * @param {number} viewName
-     * @param {number} view
-     * */
-    createGenericView: function(viewName, view) {
-        this.views[viewName] = view;
-        view.render();
-
-        this[viewName] = Delegate.create(this, function() {
-            var shell = this.views.shell;
-            var routeArgs = arguments;
-            shell.writeContent(view);
-            view.refresh && view.refresh.apply(view, routeArgs);
-       });
-    },
-
-    /**
-     * Event listener
-     * @private
-     * */
-    onOrientationChange_: function () {
-        console.log('orientation change')
-    }
-});

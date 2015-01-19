@@ -1,16 +1,8 @@
 goog.provide("modules.test.View");
 
-modules.test.View = Backbone.View.extend({
-    initialize: function () {
-        this.template = _.template(tplContainer['tpl/test.html']);
-    },
-    events: {
-    	
-    },
+goog.require('bok.backboneplus.BBPView');
 
-    render: function () {
-        this.$el.html(this.template());
-
-        return this;
-    }
-});
+modules.test.View = function() {
+    BBPView.call(this, tplContainer['tpl/test.html']);
+};
+BOK.inherits(modules.test.View, BBPView);

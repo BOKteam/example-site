@@ -15,7 +15,7 @@ goog.require("app.Router");
 goog.require("app.assetsList");
 
 
-var preloaderApp, mainPage, mainRouter, imgContainer = {}, tplContainer = {};
+var preloaderApp, mainPage, imgContainer = {}, tplContainer = {};
 $(document).ready(start);
 
 function start()
@@ -31,25 +31,14 @@ function start()
 
 function assetsLoaded()
 {
-    //remove body height after loading
-    document.body.style.height = 0;
-
+    //init multi-lang support
     Translations.setLang(Cookie.get('lang') || 'en');
 
-    mainRouter = new app.Router();
+    //init backbone
+    var mainRouter = new app.Router();
     Backbone.history.start();
 
     //init fast click
     FastClick.attach(document.body);
 }
 
-
-
-/** 
- * @param {Number} a
- * */
-bok.test = function(a) {
-    return 1;
-};
-
-bok.test('x');
